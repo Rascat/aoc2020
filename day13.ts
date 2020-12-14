@@ -51,13 +51,6 @@ function mulInv(a: bigint, b: bigint): bigint {
     return x1;
 }
 
-function absmod(a: bigint, n: bigint): bigint {
-    while(a < 0) {
-        a += n;
-    }
-    return a % n;
-}
-
 function chineseRemainderTheorem(moduli: bigint[], values: bigint[]): bigint {
     let prod: bigint = moduli.reduce<bigint>((a, b) => a * b, BigInt(1));
 
@@ -80,7 +73,7 @@ function part2(input: string): bigint {
         if (ids[i] !== 'x') {
             let mod: bigint = BigInt(ids[i]);
             moduli.push(mod);
-            remainder.push(BigInt(absmod(mod - BigInt(i), mod)))
+            remainder.push(BigInt(mod - (BigInt(i) % mod)));
         }
     }
 
