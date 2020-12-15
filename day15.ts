@@ -21,27 +21,31 @@ function part1(input: string): number {
 }
 
 function part2(input: string): number {
-    let stack: Array<number> = input.split(',').map(x => parseInt(x));
+    let initialNumbers: Array<number> = input.split(',').map(x => parseInt(x));
 
     let lastOccurrenceMap: Map<number, number> = new Map();
-    for (let i = 0; i < stack.length - 1; i++) {
-        lastOccurrenceMap.set(stack[i], i + 1);
+    for (let i = 0; i < initialNumbers.length - 1; i++) {
+        lastOccurrenceMap.set(initialNumbers[i], i + 1);
     }
 
-    while(stack.length < 30000000) {
-        let lastNumber: number = stack[stack.length - 1];
-    
-        let nextNumber: number;
+    let numberIndex: number = initialNumbers.length;
+    let lastNumber: number = initialNumbers[initialNumbers.length - 1];
+    let nextNumber: number;
+
+    while(numberIndex < 30000000) {
+
         if (lastOccurrenceMap.has(lastNumber)) {
-            nextNumber = stack.length - lastOccurrenceMap.get(lastNumber);
+            nextNumber = numberIndex - lastOccurrenceMap.get(lastNumber);
         } else {
             nextNumber = 0;
         } 
 
-        lastOccurrenceMap.set(lastNumber, stack.length);
-        stack.push(nextNumber);
+        lastOccurrenceMap.set(lastNumber, numberIndex);
+        lastNumber = nextNumber;
+        numberIndex++;
     }
-    return stack[stack.length -1];
+
+    return lastNumber;
 }
 
 let handler = new InputHandler();
