@@ -1,43 +1,33 @@
 import { InputHandler } from './InputHandler';
 
-class Grid {
-    // boundaries in which we consider each cell
-    bx: [number, number];
-    by: [number, number];
-    bz: [number, number];
 
-    activeCells: Map<string, null>;
+class Grid3D {
+    activeCells: Map<string, Array<[number, number, number]>>;
 
     constructor(layer: Array<string>) {
         this.activeCells = new Map();
-        this.bx = [-1, layer[0].length + 1];
-        this.by = [-1, layer.length + 1];
-        this.bz = [-1, 1];
 
-        for (let x = 0; x < layer[0].length; x++) {
-            for (let y = 0; y < layer.length; y++) {
+        for (let y = 0; y < layer.length; y++) {
+            for (let x = 0; x < layer[0].length; x++) {
+
                 if (layer[y].charAt(x) === '#') {
-                    this.updateMap([x, y, 0]);
+                    this.setActive([x, y, 0]);
                 }
             }
         }
     }
 
-    updateMap(cell: [number, number, number]): void {
-        // console.log(`Added cell: ${cell}`);
-
-        this.activeCells.set(`${cell[0]}${cell[1]}${cell[2]}`, null);
+    setActive(cell: [number, number, number]): void {
+        this.activeCells.set(this.cellToString(cell), this.getNeighbors(cell));
     }
 
-    deleteCellFromMap(cell: [number, number, number]): void {
-        // console.log(`Deleted cell: ${cell}`);
-
-        let deleted: boolean = this.activeCells.delete(`${cell[0]}${cell[1]}${cell[2]}`);
+    setInactive(cell: [number, number, number]): void {
+        let deleted: boolean = this.activeCells.delete(this.cellToString(cell));
         if (!deleted) throw new Error('Could not delete cell: ' + cell)
     }
 
-    mapHasCell(cell: [number, number, number]): boolean {
-        return this.activeCells.has(`${cell[0]}${cell[1]}${cell[2]}`);
+    cellIsActive(cell: [number, number, number]): boolean {
+        return this.activeCells.has(this.cellToString(cell));
     }
 
     getNeighbors(cell: [number, number, number]): Array<[number, number, number]> {
@@ -47,7 +37,7 @@ class Grid {
             for (let y of [-1, 0, 1]) {
                 for (let z of [-1, 0, 1]) {
                     if (!(x === 0 && y === 0 && z === 0)) {
-                        neighbors.push([cell[0] + x, cell[1] + y, cell[2] + z])
+                        neighbors.push([cell[0] + x, cell[1] + y, cell[2] + z]);
                     }
                 }
             }
@@ -56,61 +46,191 @@ class Grid {
         return neighbors;
     }
 
+    getActiveCells(): Array<[number, number, number]> {
+        let activeCells: Array<[number, number, number]> = [];
+        for (let cellStr of this.activeCells.keys()) {
+            activeCells.push(this.cellFromString(cellStr));
+        }
+
+        return activeCells;
+    }
+
+    cellToString(cell: [number, number, number]): string {
+        return `${cell[0]},${cell[1]},${cell[2]}`;
+    }
+
+    cellFromString(cellStr: string): [number, number, number] {
+        let values = cellStr.split(',');
+        return [parseInt(values[0]), parseInt(values[1]), parseInt(values[2])];
+    }
+
     updateGrid() {
-        let cellsToUpdate: Array<[number, number, number]> = []
+        let cellsToUpdate: Set<string> = new Set();
 
-        for (let z = this.bz[0]; z <= this.bz[1]; z++) {
-            for (let y = this.by[0]; y <= this.by[1]; y++) {
-                for (let x = this.bx[0]; x <= this.bx[1]; x++) {
-                    let currentCell: [number, number, number] = [x, y, z];
-                    let countActiveNeighbors: number = 0;
-                    let neighbors = this.getNeighbors(currentCell);
+        for (let activeCell of this.getActiveCells()) {
+            let countActiveNeighbors: number = 0;
+            let neighbors = this.getNeighbors(activeCell);
 
-                    for (let neighbor of neighbors) {
-                        if (this.mapHasCell(neighbor)) countActiveNeighbors++;
+            for (let neighbor of neighbors) {
+                if (this.cellIsActive(neighbor)) {
+                    countActiveNeighbors++;
+                }
+                else {
+                    let countActiveNeighborsNeighbors: number = 0;
+                    let neighborsNeighbors = this.getNeighbors(neighbor);
+
+                    for (let neighborsNeighbor of neighborsNeighbors) {
+                        if (this.cellIsActive(neighborsNeighbor)) {
+                            countActiveNeighborsNeighbors++;
+                        }
                     }
 
-                    if (this.mapHasCell(currentCell)) {
-                        // cell is active -> set inactive if #active neighbors is smaller than 2 or greater than 3
-                        if (countActiveNeighbors < 2 || countActiveNeighbors > 3) {
-                            cellsToUpdate.push(currentCell);
-                        }
-                    } else {
-                        // cell is inactive -> set active if #active neighbors is 3
-                        if (countActiveNeighbors === 3) {
-                            cellsToUpdate.push(currentCell);
+                    if (countActiveNeighborsNeighbors === 3) {
+                        cellsToUpdate.add(this.cellToString(neighbor));
+                    }
+                }
+            }
+
+            if (countActiveNeighbors < 2 || countActiveNeighbors > 3) {
+                cellsToUpdate.add(this.cellToString(activeCell));
+            }
+        }
+
+        for (let cell of cellsToUpdate.values()) {
+            if (this.cellIsActive(this.cellFromString(cell))) {
+                this.setInactive(this.cellFromString(cell));
+            } else {
+                this.setActive(this.cellFromString(cell));
+            }
+        }
+    }
+}
+
+class Grid4D {
+    activeCells: Map<string, Array<[number, number, number, number]>>;
+
+    constructor(layer: Array<string>) {
+        this.activeCells = new Map();
+
+        for (let y = 0; y < layer.length; y++) {
+            for (let x = 0; x < layer[0].length; x++) {
+
+                if (layer[y].charAt(x) === '#') {
+                    this.setActive([x, y, 0, 0]);
+                }
+            }
+        }
+    }
+
+    setActive(cell: [number, number, number, number]): void {
+        this.activeCells.set(this.cellToString(cell), this.getNeighbors(cell));
+    }
+
+    setInactive(cell: [number, number, number, number]): void {
+        let deleted: boolean = this.activeCells.delete(this.cellToString(cell));
+        if (!deleted) throw new Error('Could not delete cell: ' + cell)
+    }
+
+    cellIsActive(cell: [number, number, number, number]): boolean {
+        return this.activeCells.has(this.cellToString(cell));
+    }
+
+    getNeighbors(cell: [number, number, number, number]): Array<[number, number, number, number]> {
+        let neighbors: Array<[number, number, number, number]> = [];
+
+        for (let x of [-1, 0, 1]) {
+            for (let y of [-1, 0, 1]) {
+                for (let z of [-1, 0, 1]) {
+                    for (let w of [-1, 0, 1]) {
+                        if (!(x === 0 && y === 0 && z === 0 && w === 0)) {
+                            neighbors.push([cell[0] + x, cell[1] + y, cell[2] + z, cell[3] + w]);
                         }
                     }
                 }
             }
         }
 
-        for (let cell of cellsToUpdate) {
-            if (this.mapHasCell(cell)) {
-                this.deleteCellFromMap(cell);
-            } else {
-                this.updateMap(cell);
+        return neighbors;
+    }
+
+    getActiveCells(): Array<[number, number, number, number]> {
+        let activeCells: Array<[number, number, number, number]> = [];
+        for (let cellStr of this.activeCells.keys()) {
+            activeCells.push(this.cellFromString(cellStr));
+        }
+
+        return activeCells;
+    }
+
+    cellToString(cell: [number, number, number, number]): string {
+        return `${cell[0]},${cell[1]},${cell[2]},${cell[3]}`;
+    }
+
+    cellFromString(cellStr: string): [number, number, number, number] {
+        let values = cellStr.split(',');
+        return [parseInt(values[0]), parseInt(values[1]), parseInt(values[2]), parseInt(values[3])];
+    }
+
+    updateGrid() {
+        let cellsToUpdate: Set<string> = new Set();
+
+        for (let activeCell of this.getActiveCells()) {
+            let countActiveNeighbors: number = 0;
+            let neighbors = this.getNeighbors(activeCell);
+
+            for (let neighbor of neighbors) {
+                if (this.cellIsActive(neighbor)) {
+                    countActiveNeighbors++;
+                }
+                else {
+                    let countActiveNeighborsNeighbors: number = 0;
+                    let neighborsNeighbors = this.getNeighbors(neighbor);
+
+                    for (let neighborsNeighbor of neighborsNeighbors) {
+                        if (this.cellIsActive(neighborsNeighbor)) {
+                            countActiveNeighborsNeighbors++;
+                        }
+                    }
+
+                    if (countActiveNeighborsNeighbors === 3) {
+                        cellsToUpdate.add(this.cellToString(neighbor));
+                    }
+                }
+            }
+
+            if (countActiveNeighbors < 2 || countActiveNeighbors > 3) {
+                cellsToUpdate.add(this.cellToString(activeCell));
             }
         }
 
-        let xFrom = this.bx[0];
-        let xTo = this.bx[1];
-        let yFrom = this.by[0];
-        let yTo = this.by[1];
-        let zFrom = this.bz[0];
-        let zTo = this.bz[1];
-
-        xFrom--;
-        xTo++;
-        yFrom--;
-        yTo++;
-        zFrom--;
-        zTo++;
-
-        this.bx = [xFrom, xTo];
-        this.by = [yFrom, yTo];
-        this.bz = [zFrom, zTo];
+        for (let cell of cellsToUpdate.values()) {
+            if (this.cellIsActive(this.cellFromString(cell))) {
+                this.setInactive(this.cellFromString(cell));
+            } else {
+                this.setActive(this.cellFromString(cell));
+            }
+        }
     }
+}
+
+function part1(input: Array<string>): number {
+    let grid: Grid3D = new Grid3D(input);
+
+    for (let cycle = 0; cycle < 6; cycle++) {
+        grid.updateGrid();
+    }
+
+    return grid.activeCells.size;
+}
+
+function part2(input: Array<string>): number {
+    let grid: Grid4D = new Grid4D(input);
+
+    for (let cycle = 0; cycle < 6; cycle++) {
+        grid.updateGrid();
+    }
+
+    return grid.activeCells.size
 }
 
 function test1() {
@@ -118,7 +238,7 @@ function test1() {
 ..#
 ###`
 
-    let grid = new Grid(input.split('\n'));
+    let grid = new Grid3D(input.split('\n'));
     for (let cycle = 0; cycle < 6; cycle++) {
         grid.updateGrid();
     }
@@ -129,11 +249,4 @@ function test1() {
 let handler = new InputHandler();
 let input: Array<string> = handler.getInputAsListOfStr('./input/day17_input.txt');
 
-
-let grid: Grid = new Grid(input);
-
-for (let cycle = 0; cycle < 6; cycle++) {
-    grid.updateGrid();
-}
-
-console.log(grid.activeCells.size);
+console.log(part2(input));
