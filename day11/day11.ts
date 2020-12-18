@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 import { performance } from 'perf_hooks';
 
 function isEmpty(seat: string): boolean {
@@ -54,7 +55,7 @@ function countOccupiedVisible(currX: number, currY: number, seats: Array<Array<s
 
 
 let handler = new InputHandler();
-let input: Array<Array<string>> = handler.getInputAsListOfStr('./input/day11_input.txt').map<Array<string>>(x => x.split(''));
+let input: Array<Array<string>> = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt')).map<Array<string>>(x => x.split(''));
 
 function part1(input: Array<Array<string>>): number {
     let updateIndex: Array<[number, number]> = []; // contains seat indices in a [x, y] format

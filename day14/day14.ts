@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class V1Emulator {
 
@@ -139,5 +140,5 @@ function part2(input: Array<string>): number {
 }
 
 let handler = new InputHandler();
-let input: Array<string> = handler.getInputAsListOfStr('./input/day14_input.txt');
+let input: Array<string> = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 console.log(part2(input));

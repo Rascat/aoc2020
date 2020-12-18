@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler'
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class Field {
     name: string;
@@ -144,6 +145,6 @@ console.log(part2(input.split('\n\n')));
 
 
 let handler = new InputHandler();
-let input = handler.getInputAsListOfStr('./input/day16_input.txt', '\n\n');
+let input = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'), '\n\n');
 
 console.log(part2(input));

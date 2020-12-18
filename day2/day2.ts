@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class PasswordRule {
   range: [number, number];
@@ -32,7 +33,7 @@ class PasswordRule {
 }
 
 var handler = new InputHandler();
-var input = handler.getInputAsListOfStr('./day2_input.txt');
+var input = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 var countValidRental = 0
 var countValidToboggan = 0
 

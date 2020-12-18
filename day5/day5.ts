@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class SeatPos {
   row: number;
@@ -21,7 +22,7 @@ class SeatPos {
 }
 
 let handler = new InputHandler();
-let input = handler.getInputAsListOfStr('day5_input.txt');
+let input = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 
 let maxSeat = new SeatPos(input[0]);
 for (let entry of input) {

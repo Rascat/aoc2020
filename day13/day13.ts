@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 import { performance } from 'perf_hooks';
 
 function part1(input: Array<string>): number {
@@ -83,7 +84,7 @@ function part2(input: string): bigint {
 }
 
 let handler = new InputHandler();
-let input = handler.getInputAsListOfStr('./input/day13_input.txt');
+let input = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 let testInput1 = '7,13,x,x,59,x,31,19';
 let testInput2 = '17,x,13,19';
 let testInput3 = '67,7,59,61';

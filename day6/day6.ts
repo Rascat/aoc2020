@@ -1,7 +1,8 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 let handler = new InputHandler();
-let input = handler.getInputAsListOfStr('day6_input.txt', '\n\n');
+let input = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'), '\n\n');
 
 function part1(input: Array<string>): number {
   let count: number = 0;

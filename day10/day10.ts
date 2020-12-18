@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class Tree {
     jolt: number;
@@ -66,7 +67,7 @@ function part1(input: Array<number>): number {
 }
 
 let handler = new InputHandler;
-let input: Array<number> = handler.getInputAsListOfInt('./input/day10_input.txt');
+let input: Array<number> = handler.getInputAsListOfInt(path.join(__dirname, 'input.txt'));
 
 function buildTree(jolt: number, input: Array<number>): Tree {
     let tree = new Tree(jolt);

@@ -1,7 +1,8 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 var handler = new InputHandler();
-var values = handler.getInputAsListOfInt('./day1_input.txt')
+var values = handler.getInputAsListOfInt(path.join(__dirname, 'input.txt'))
 
 task_1: for (let i in values) {
   for (let j in values) {

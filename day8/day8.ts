@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class Instruction {
     operation: string;
@@ -11,7 +12,7 @@ class Instruction {
 }
 
 let handler = new InputHandler();
-let input = handler.getInputAsListOfStr('./day8_input.txt');
+let input = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 
 let instructions: Array<Instruction> = input.map<Instruction>(x => new Instruction(x))
 

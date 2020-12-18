@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 let testData: Array<string> = ['F10', 'N3', 'F7', 'R90', 'F11']
 
@@ -157,7 +158,7 @@ class WaypointShip {
 
 
 let handler = new InputHandler();
-let input = handler.getInputAsListOfStr('./input/day12_input.txt');
+let input = handler.getInputAsListOfStr(path.join(__dirname, './input.txt'));
 
 let instructions: Array<Instruction> = input.map<Instruction>(x => new Instruction(x));
 let ship = new WaypointShip();

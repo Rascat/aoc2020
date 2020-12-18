@@ -1,7 +1,8 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 let handler = new InputHandler();
-let input: Array<number> = handler.getInputAsListOfInt('./input/day9_input.txt');
+let input: Array<number> = handler.getInputAsListOfInt(path.join(__dirname, 'input.txt'));
 
 function part1(input: Array<number>): number {
     let wStart: number = 0;

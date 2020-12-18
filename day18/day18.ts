@@ -4,7 +4,7 @@ let parser1 = require('./parser1.js');
 let parser2 = require('./parser2.js');
 
 let handler = new InputHandler();
-let input: Array<string> = handler.getInputAsListOfStr(path.join(__dirname, 'day18_input.txt'));
+let input: Array<string> = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 
 function part1(input: Array<string>): number {
     let sum: number = 0;
@@ -22,4 +22,5 @@ function part2(input: Array<string>): number {
     return sum;
 }
 
+console.log(part1(input));
 console.log(part2(input));

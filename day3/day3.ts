@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class ForestStrip {
   strip: string[];
@@ -43,7 +44,7 @@ class ForestStrip {
 }
 
 var handler = new InputHandler();
-var input = handler.getInputAsListOfStr('day3_input.txt');
+var input = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 
 let strip0 = new ForestStrip(input, [1, 1]);
 let strip1 = new ForestStrip(input, [3, 1]);

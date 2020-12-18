@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 
 function part1(input: string): number {
@@ -49,6 +50,6 @@ function part2(input: string): number {
 }
 
 let handler = new InputHandler();
-let input: string = handler.readFile('./input/day15_input.txt');
+let input: string = handler.readFile(path.join(__dirname, 'input.txt'));
 
 console.log(part2(input));

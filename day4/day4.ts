@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class Document {
   byr: number;
@@ -92,7 +93,7 @@ class Document {
 }
 
 let handler = new InputHandler();
-let input: Array<string> = handler.getInputAsListOfStr('day4_input.txt', '\n\n').map(x => x.replace(/\n/g, ' '));
+let input: Array<string> = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'), '\n\n').map(x => x.replace(/\n/g, ' '));
 
 let countValid: number = 0;
 

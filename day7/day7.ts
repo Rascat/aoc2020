@@ -1,4 +1,5 @@
-import { InputHandler } from './InputHandler';
+import { InputHandler } from '../InputHandler';
+import * as path from 'path';
 
 class Bag {
     _color: string;
@@ -27,7 +28,7 @@ class Bag {
 }
 
 let handler = new InputHandler();
-let input: Array<string> = handler.getInputAsListOfStr('./day7_input.txt');
+let input: Array<string> = handler.getInputAsListOfStr(path.join(__dirname, 'input.txt'));
 let bags: Array<Bag> = input.map<Bag>(x => {return new Bag(x)});
 
 function part1(bags: Array<Bag>): number {
